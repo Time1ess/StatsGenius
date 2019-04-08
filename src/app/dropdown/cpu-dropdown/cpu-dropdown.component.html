@@ -1,0 +1,25 @@
+<div class="container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="5px">
+  <span class="title" fxLayout="row" fxLayoutAlign="center">
+    CPU
+  </span>
+  <mat-card>
+    <mat-card-content>
+      <div echarts [options]="chartOption"></div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-content>
+      <p>
+        User: {{ cpuData.userCPU }}
+      </p>
+
+      <p>
+        System: {{ cpuData.systemCPU }}
+      </p>
+
+      <p>
+        Idle: {{ cpuData.idleCPU }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>
