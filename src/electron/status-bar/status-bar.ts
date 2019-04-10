@@ -1,6 +1,10 @@
 import { Tray, Rectangle, BrowserWindow } from 'electron';
 import * as path from 'path';
+import { Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
+
 import { CPUMonitor } from '../stats/cpu';
+import { CPUData } from '../../interfaces/cpu';
 
 
 class StatusBarItem {
@@ -8,11 +12,20 @@ class StatusBarItem {
     private window: BrowserWindow;
     private monitor = new CPUMonitor();
 
+    private update$ = new Subject<CPUData>();
+
     constructor() {
         this.createWindow();
         this.createTray();
+        this.update$.pipe(
+            throttleTime(5000),
+        ).subscribe((data) => {
+            const title = `CPU: ${Math.round(data.totalUsage.userCPU + data.totalUsage.systemCPU)}%`;
+            this.tray.setTitle(title);
+        });
         this.monitor.data.subscribe(data => {
             this.window.webContents.send('cpu-data', data);
+            this.update$.next(data);
         });
     }
 
