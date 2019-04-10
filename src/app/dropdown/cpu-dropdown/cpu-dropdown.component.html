@@ -1,25 +1,51 @@
-<div class="container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="5px">
+<div class="dropdown-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px"
+  *ngIf="cpuData !== null">
   <span class="title" fxLayout="row" fxLayoutAlign="center">
     CPU
   </span>
-  <mat-card>
-    <mat-card-content>
-      <div echarts [options]="chartOption"></div>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-content>
-      <p>
-        User: {{ cpuData.userCPU }}
-      </p>
+  <div fxLayout="row" fxFlex="1 1 12%" fxLayoutAlign="space-between stretch">
+    <div echarts [options]="cpuUsageOptions" (chartInit)="onCpuUsageChartInit($event)" fxFlex="1 1 79%"></div>
+    <div echarts [options]="coreUsageOptions" (chartInit)="onCoreUsageChartInit($event)" fxFlex="1 1 19%"></div>
+  </div>
 
-      <p>
-        System: {{ cpuData.systemCPU }}
-      </p>
+  <div fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <div fxlayout="row" fxLayoutAlign="center center">
+        <mat-icon class="rounded red">stop</mat-icon>
+        <span>User</span>
+      </div>
+      <span>
+        {{ cpuData.totalUsage.userCPU | number:'1.0-2' }}%
+      </span>
+    </div>
 
-      <p>
-        Idle: {{ cpuData.idleCPU }}
-      </p>
-    </mat-card-content>
-  </mat-card>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <div fxlayout="row" fxLayoutAlign="center center">
+        <mat-icon class="rounded blue">stop</mat-icon>
+        <span>System</span>
+      </div>
+      <span>
+        {{ cpuData.totalUsage.systemCPU | number:'1.0-2' }}%
+      </span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <div fxlayout="row" fxLayoutAlign="center center">
+        <mat-icon class="rounded gray">stop</mat-icon>
+        <span>Idle</span>
+      </div>
+      <span>
+        {{ cpuData.totalUsage.idleCPU | number:'1.0-2' }}%
+      </span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start">
+    <span>CPU Temperature</span>
+    <span>60°</span>
+  </div>
+
+  <mat-divider></mat-divider>
+
 </div>

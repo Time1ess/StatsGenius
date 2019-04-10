@@ -1,11 +1,19 @@
-.container {
-    height: 100%;
-    width: 100%;
-}
-
-.title,p {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
 .title {
     color: rgb(47, 180, 250);
+}
+
+.rounded {
+    clip-path: circle(30% at center);
+}
+
+.red {
+    color: #f44336;
+}
+
+.blue {
+    color: #2196f3;
+}
+
+.gray {
+    color: #aaaaaa;
 }

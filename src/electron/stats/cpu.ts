@@ -1,54 +1,35 @@
 import * as child_process from 'child_process';
 import { EventEmitter } from 'events';
 import { Observable, Subject } from 'rxjs';
-import { ipcMain, IpcMessageEvent } from 'electron';
-
-
-export interface CPUData {
-    /** How much CPU is consumed by user processes. */
-    userCPU: number;
-    /** How much CPU is consumed by system processes. */
-    systemCPU: number;
-    /** How much CPU is idle. */
-    idleCPU: number;
-}
-
+import { CPUData } from '../../interfaces/cpu';
 
 export class CPUMonitor extends EventEmitter {
     /** Regular pattern used to extract cpu load status. */
-    private static cpuLoadPattern = new RegExp('(\\d*\\.?\\d*)% user, (\\d*\\.?\\d*)% sys, (\\d*\\.?\\d*)% idle');
+    private static cpuUsagePattern = new RegExp('(\\d*\\.?\\d*)% user, (\\d*\\.?\\d*)% sys, (\\d*\\.?\\d*)% idle');
+    private static cpuLoadPattern = new RegExp('vm.loadavg: { (\\d*\\.?\\d*) (\\d*\\.?\\d*) (\\d*\\.?\\d*) }');
 
     public data: Observable<CPUData>;
 
     private data$ = new Subject<CPUData>();
-    private _data: CPUData;
     private topProcess: child_process.ChildProcess;
 
     constructor() {
         super();
         this.data = this.data$;
-        this.topProcess = child_process.spawn(
-            '/usr/bin/top',
-            ['-stats', 'pid,cpu,command', '-o', 'cpu', '-n', '8', '-s', '2']);
-
+        this.topProcess = child_process.spawn('/usr/bin/top', ['-stats', 'pid,cpu,command', '-o', 'cpu', '-n', '8', '-s', '1']);
         this.topProcess.stdout.on('data', (data: string) => {
-            this.parseTopData(data);
-        });
-
-        this.on('exit', () => {
-            this.topProcess.kill('SIGINT');
-        });
-
-        ipcMain.on('GET:cpu-data', (event: IpcMessageEvent) => {
-            event.sender.send('cpu-data', this._data);
+            this.data$.next(this.parseData(data));
         });
     }
 
-    private parseTopData(data: string) {
-        const match = CPUMonitor.cpuLoadPattern.exec(data);
+    private parseData(data: string): CPUData {
+        const match = CPUMonitor.cpuUsagePattern.exec(data);
         const [userCPU, systemCPU, idleCPU] = match.slice(1, 4).map(x => +x);
-        this._data = {userCPU, systemCPU, idleCPU};
-        this.data$.next(this._data);
+        return {
+            totalUsage: { userCPU, systemCPU, idleCPU },
+            coreUsage: [],
+            processes: [],
+        };
     }
 }
 
@@ -56,8 +37,8 @@ if (require.main === module) {
     const monitor = new CPUMonitor();
 
     monitor.data.subscribe(data => {
-        process.stdout.write('User CPU: ' + data.userCPU + '\n');
-        process.stdout.write('System CPU: ' + data.systemCPU + '\n');
-        process.stdout.write('Idle CPU: ' + data.idleCPU + '\n');
+        process.stdout.write('User CPU: ' + data.totalUsage.userCPU + '\n');
+        process.stdout.write('System CPU: ' + data.totalUsage.systemCPU + '\n');
+        process.stdout.write('Idle CPU: ' + data.totalUsage.idleCPU + '\n');
     });
 }

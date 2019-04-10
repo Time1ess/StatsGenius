@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import {
   MatDividerModule,
   MatCardModule,
+  MatIconModule,
   MatListModule,
 } from '@angular/material';
 
@@ -25,6 +26,7 @@ import { CPUDropdownComponent } from './cpu-dropdown/cpu-dropdown.component';
     NgxEchartsModule,
     MatCardModule,
     MatDividerModule,
+    MatIconModule,
     MatListModule,
   ]
 })

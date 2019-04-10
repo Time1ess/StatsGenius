@@ -11,6 +11,9 @@ class StatusBarItem {
     constructor() {
         this.createWindow();
         this.createTray();
+        this.monitor.data.subscribe(data => {
+            this.window.webContents.send('cpu-data', data);
+        });
     }
 
     private createTray() {
@@ -31,6 +34,7 @@ class StatusBarItem {
         });
         this.window.setVisibleOnAllWorkspaces(true);
         this.window.loadURL('http://localhost:4200/dropdown/cpu');
+        this.window.webContents.openDevTools();
         return this.window;
     }
 
