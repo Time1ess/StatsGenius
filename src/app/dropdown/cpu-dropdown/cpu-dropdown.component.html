@@ -4,28 +4,28 @@
     CPU
   </span>
   <div fxLayout="row" fxFlex="1 1 12%" fxLayoutAlign="space-between stretch">
-    <div echarts [options]="cpuUsageOptions" (chartInit)="onCpuUsageChartInit($event)" fxFlex="1 1 79%"></div>
-    <div echarts [options]="coreUsageOptions" (chartInit)="onCoreUsageChartInit($event)" fxFlex="1 1 19%"></div>
+    <div echarts [options]="cpuUsageOptions" (chartInit)="onCpuUsageChartInit($event)" fxFlex="1 1 84%"></div>
+    <div echarts [options]="coreUsageOptions" (chartInit)="onCoreUsageChartInit($event)" fxFlex="1 1 15%"></div>
   </div>
 
   <div fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <div fxlayout="row" fxLayoutAlign="center center">
-        <mat-icon class="rounded red">stop</mat-icon>
+        <mat-icon class="rounded blue">stop</mat-icon>
         <span>User</span>
       </div>
       <span>
-        {{ cpuData.totalUsage.userCPU | number:'1.0-2' }}%
+        {{ cpuData.totalUsage.userCPU | number:'1.0-0' }}%
       </span>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <div fxlayout="row" fxLayoutAlign="center center">
-        <mat-icon class="rounded blue">stop</mat-icon>
+        <mat-icon class="rounded red">stop</mat-icon>
         <span>System</span>
       </div>
       <span>
-        {{ cpuData.totalUsage.systemCPU | number:'1.0-2' }}%
+        {{ cpuData.totalUsage.systemCPU | number:'1.0-0' }}%
       </span>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between start">
@@ -34,7 +34,7 @@
         <span>Idle</span>
       </div>
       <span>
-        {{ cpuData.totalUsage.idleCPU | number:'1.0-2' }}%
+        {{ cpuData.totalUsage.idleCPU | number:'1.0-0' }}%
       </span>
     </div>
   </div>
@@ -47,5 +47,18 @@
   </div>
 
   <mat-divider></mat-divider>
+  <span class="title" fxLayout="row" fxLayoutAlign="center">
+    PROCESSES
+  </span>
+
+  <div fxLayout="column" *ngIf="cpuData.processes">
+    <div fxLayout="row" fxLayoutAlign="space-between start" *ngFor="let process of cpuData.processes">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+        <img class="icon" src="{{ iconService.getIconForProcess(process.processName) | async }}">
+        <span>{{ process.processName }}</span>
+      </div>
+      <span>{{ process.processCPU | number:'1.0-1' }}%</span>
+    </div>
+  </div>
 
 </div>

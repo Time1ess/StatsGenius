@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { interval, Observable, Subject } from 'rxjs';
-import { CPUData } from '../../interfaces/cpu';
-const CPUMeter = require('../../../lib/binding/build/Release/darwin_cpu_meter');
+import { CPUData } from '../../src/interfaces/cpu';
+const CPUMeter = require('../../lib/binding/build/Release/darwin_cpu_meter');
 
 export class CPUMonitor extends EventEmitter {
 

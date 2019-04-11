@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CpuDataService } from '../../services/cpu-data.service';
 import { CPUData } from '../../../interfaces/cpu';
+import { IconService } from '../../services/icon.service';
 
 @Component({
   selector: 'app-cpu-dropdown',
@@ -12,12 +13,8 @@ import { CPUData } from '../../../interfaces/cpu';
   styleUrls: ['./cpu-dropdown.component.scss']
 })
 export class CPUDropdownComponent implements OnInit, OnDestroy {
-  readonly userCPUColor = '#f44336';
-  readonly systemCPUColor = '#2196f3';
-  /* How ofthen should be update the chart. (in seconds) */
-  readonly updateInterval = 2;
-  /* How much of data recently received should be displayed. (in seconds) */
-  readonly recentlyDataLimit = 30 * 60;
+  readonly userCPUColor = '#2196f3';  // Blue
+  readonly systemCPUColor = '#f44336';  // Red
 
   cpuData: CPUData = null;
   cpuUsageOptions: EChartOption = {
@@ -45,6 +42,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
         },
         areaStyle: {
           color: this.userCPUColor,
+          shadowColor: this.userCPUColor,
+          shadowBlur: 1,
         },
         silent: true,
       },
@@ -60,6 +59,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
         },
         areaStyle: {
           color: this.systemCPUColor,
+          shadowColor: this.systemCPUColor,
+          shadowBlur: 1,
         },
         silent: true,
       },
@@ -122,24 +123,13 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
 
   constructor(
     readonly cpuDataService: CpuDataService,
+    readonly iconService: IconService,
   ) { }
 
   ngOnInit() {
     this.cpuDataService.cpuData.pipe(
       takeUntil(this.destroyed$),
     ).subscribe((data) => this.update(data));
-  }
-
-  private updateData(data: CPUData) {
-    this.cpuData = data;
-    this.historyLabel.push(new Date().toLocaleTimeString());
-    this.historyUserCPU.push(this.cpuData.totalUsage.userCPU);
-    this.historySystemCPU.push(this.cpuData.totalUsage.systemCPU);
-    if (this.historyLabel.length > this.recentlyDataLimit / this.updateInterval) {
-      this.historyLabel.shift();
-      this.historyUserCPU.shift();
-      this.historySystemCPU.shift();
-    }
   }
 
   ngOnDestroy() {
@@ -151,6 +141,18 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     this.updateData(data);
     this.updateCpuUsageChart();
     this.updateCoreUsageChart();
+  }
+
+  private updateData(data: CPUData) {
+    this.cpuData = data;
+    this.historyLabel.push(new Date().toLocaleTimeString());
+    this.historyUserCPU.push(this.cpuData.totalUsage.userCPU);
+    this.historySystemCPU.push(this.cpuData.totalUsage.systemCPU);
+    if (this.historyLabel.length > 900) {
+      this.historyLabel.shift();
+      this.historyUserCPU.shift();
+      this.historySystemCPU.shift();
+    }
   }
 
   onCpuUsageChartInit(event: ECharts) {

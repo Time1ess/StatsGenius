@@ -19,6 +19,7 @@
         "!tsconfig.json",
         "!tslint.json",
         "!lib",
+        "lib/binding/build/Release",
         "src/electron",
         "src/interfaces"
     ],

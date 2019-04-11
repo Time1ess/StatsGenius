@@ -1,13 +1,11 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import { StatusBar } from './src/electron/status-bar/status-bar';
-import { CPUMonitor } from './src/electron/stats/cpu';
+import { StatusBar } from './electron/status-bar/status-bar';
+const isDev = require('electron-is-dev');
 
 let win: BrowserWindow;
 let statusBar: StatusBar;
-const args = process.argv.slice(1);
-const serve = args.some(val => val === '--serve');
 
 function createWindow() {
   // Create the browser window.
@@ -21,21 +19,17 @@ function createWindow() {
     },
   });
 
-  if (serve) {
+  if (isDev) {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
     });
+    win.webContents.openDevTools();
     win.loadURL('http://localhost:4200/');
   } else {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
-      slashes: true
     }));
-  }
-
-  if (serve) {
-    win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
@@ -17,7 +18,9 @@ export class ElectronService {
   childProcess: typeof childProcess;
   fs: typeof fs;
 
-  constructor() {
+  constructor(
+    private router: Router,
+  ) {
     // Conditional imports
     if (this.isElectron()) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
@@ -26,6 +29,11 @@ export class ElectronService {
 
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
+
+      // Listen events from main.
+      this.ipcRenderer.on('navigate-to-route', (event, url) => {
+        this.router.navigateByUrl(url);
+      });
     }
   }
 

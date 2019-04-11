@@ -1,10 +1,12 @@
-import { Tray, Rectangle, BrowserWindow } from 'electron';
+import { Tray, BrowserWindow, Rectangle } from 'electron';
 import * as path from 'path';
 import { Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import * as url from 'url';
 
 import { CPUMonitor } from '../stats/cpu';
-import { CPUData } from '../../interfaces/cpu';
+import { CPUData } from '../../src/interfaces/cpu';
+
+const isDev = require('electron-is-dev');
 
 
 class StatusBarItem {
@@ -27,7 +29,7 @@ class StatusBarItem {
 
     private createTray() {
         this.tray = new Tray(path.join(__dirname, '..', 'assets', 'images', 'icon.png'));
-        this.tray.setToolTip('MacGenius.');
+        this.tray.setToolTip('Mac Genius');
         this.tray.on('click', this.onClick.bind(this));
     }
 
@@ -42,8 +44,18 @@ class StatusBarItem {
             this.window.hide();
         });
         this.window.setVisibleOnAllWorkspaces(true);
-        this.window.loadURL('http://localhost:4200/dropdown/cpu');
-        this.window.webContents.openDevTools();
+        if (isDev) {
+            this.window.webContents.openDevTools();
+            this.window.loadURL('http://localhost:4200/');
+        } else {
+            this.window.loadURL(url.format({
+                pathname: path.join(__dirname, '../../dist/index.html'),
+                protocol: 'file:',
+            }));
+        }
+        this.window.webContents.once('dom-ready', () => {
+            this.window.webContents.send('navigate-to-route', '/dropdown/cpu');
+        });
         return this.window;
     }
 

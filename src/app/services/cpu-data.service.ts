@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { timer, Subject, Observable } from 'rxjs';
 
-import { CPUUsage, CPUData } from '../../interfaces/cpu';
+import { CPUUsage, CPUData, ProcessData } from '../../interfaces/cpu';
 import { ElectronService } from './electron.service';
 
 @Injectable({
@@ -31,33 +31,22 @@ export class CpuDataService {
       }
       return res;
     };
+    const genProcessUsage = (total: number): ProcessData[] => {
+      const res: ProcessData[] = [];
+      for (let i = 0; i < total; i++) {
+        res.push({
+          processName: `Process ${i}`,
+          processCPU: 150 * Math.random(),
+        });
+      }
+      return res.sort((x, y) => y.processCPU - x.processCPU);
+    };
     if (!this.electronService.isElectron()) {
       timer(0, 1000).subscribe(() => {
         this.cpuData$.next({
           totalUsage: genUsage(),
-          coreUsage: genUsages(4),
-          processes: [
-            {
-              processName: 'A',
-              processCPU: 23.2,
-            },
-            {
-              processName: 'B',
-              processCPU: 15.2,
-            },
-            {
-              processName: 'C',
-              processCPU: 12.2,
-            },
-            {
-              processName: 'D',
-              processCPU: 8.2,
-            },
-            {
-              processName: 'E',
-              processCPU: 5.2,
-            },
-          ],
+          coreUsage: genUsages(8),
+          processes: genProcessUsage(8),
         });
       });
       return;

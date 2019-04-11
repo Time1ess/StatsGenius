@@ -1,18 +1,16 @@
 {
-  "name": "angular-electron",
-  "version": "5.1.0",
-  "description": "Angular 7 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "mac-genius",
+  "version": "0.1.0",
+  "description": "System Monitor",
+  "homepage": "https://github.com/Timeless",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Youchen Du",
+    "email": "youchen.du@gmail.com"
   },
   "keywords": [
     "angular",
-    "angular 7",
     "electron",
-    "typescript",
-    "sass"
+    "monitor"
   ],
   "main": "main.js",
   "private": true,
@@ -89,6 +87,7 @@
     "@angular/material": "^7.3.7",
     "bindings": "^1.5.0",
     "echarts": "^4.2.1",
+    "electron-is-dev": "^1.1.0",
     "nan": "^2.13.2",
     "ngx-echarts": "^4.1.0",
     "rxjs": "^6.4.0"
