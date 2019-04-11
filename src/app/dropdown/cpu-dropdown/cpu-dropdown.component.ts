@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EChartOption, graphic, ECharts, EChartsSeriesType } from 'echarts';
+import { EChartOption, ECharts } from 'echarts';
 import { Subject } from 'rxjs';
-import { takeUntil, throttleTime, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import { CpuDataService } from '../../services/cpu-data.service';
 import { CPUData } from '../../../interfaces/cpu';
@@ -127,7 +127,6 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.cpuDataService.cpuData.pipe(
       takeUntil(this.destroyed$),
-      throttleTime(this.updateInterval * 1000),
     ).subscribe((data) => this.update(data));
   }
 

@@ -17,20 +17,16 @@ class StatusBarItem {
     constructor() {
         this.createWindow();
         this.createTray();
-        this.update$.pipe(
-            throttleTime(5000),
-        ).subscribe((data) => {
-            const title = `CPU: ${Math.round(data.totalUsage.userCPU + data.totalUsage.systemCPU)}%`;
-            this.tray.setTitle(title);
-        });
         this.monitor.data.subscribe(data => {
             this.window.webContents.send('cpu-data', data);
+            const title = `CPU: ${Math.round(data.totalUsage.userCPU + data.totalUsage.systemCPU)}%`;
+            this.tray.setTitle(title);
             this.update$.next(data);
         });
     }
 
     private createTray() {
-        this.tray = new Tray(path.join(__dirname, '..', '..', 'assets', 'images', 'icon.png'));
+        this.tray = new Tray(path.join(__dirname, '..', 'assets', 'images', 'icon.png'));
         this.tray.setToolTip('MacGenius.');
         this.tray.on('click', this.onClick.bind(this));
     }

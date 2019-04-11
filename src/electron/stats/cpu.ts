@@ -1,35 +1,24 @@
-import * as child_process from 'child_process';
 import { EventEmitter } from 'events';
-import { Observable, Subject } from 'rxjs';
+import { interval, Observable, Subject } from 'rxjs';
 import { CPUData } from '../../interfaces/cpu';
+const CPUMeter = require('../../../lib/binding/build/Release/darwin_cpu_meter');
 
 export class CPUMonitor extends EventEmitter {
-    /** Regular pattern used to extract cpu load status. */
-    private static cpuUsagePattern = new RegExp('(\\d*\\.?\\d*)% user, (\\d*\\.?\\d*)% sys, (\\d*\\.?\\d*)% idle');
-    private static cpuLoadPattern = new RegExp('vm.loadavg: { (\\d*\\.?\\d*) (\\d*\\.?\\d*) (\\d*\\.?\\d*) }');
 
     public data: Observable<CPUData>;
 
     private data$ = new Subject<CPUData>();
-    private topProcess: child_process.ChildProcess;
 
     constructor() {
         super();
         this.data = this.data$;
-        this.topProcess = child_process.spawn('/usr/bin/top', ['-stats', 'pid,cpu,command', '-o', 'cpu', '-n', '8', '-s', '1']);
-        this.topProcess.stdout.on('data', (data: string) => {
-            this.data$.next(this.parseData(data));
+        interval(2000).subscribe(() => {
+            const rawLoadInfo: CPUData = CPUMeter.GetCPULoadInfo();
+            if (!rawLoadInfo) {
+                return;
+            }
+            this.data$.next(rawLoadInfo);
         });
-    }
-
-    private parseData(data: string): CPUData {
-        const match = CPUMonitor.cpuUsagePattern.exec(data);
-        const [userCPU, systemCPU, idleCPU] = match.slice(1, 4).map(x => +x);
-        return {
-            totalUsage: { userCPU, systemCPU, idleCPU },
-            coreUsage: [],
-            processes: [],
-        };
     }
 }
 

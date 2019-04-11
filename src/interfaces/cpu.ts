@@ -10,7 +10,7 @@ export interface CPUData {
     totalUsage: CPUUsage;
     /** How much CPU is used w.r.t to CPU cores. */
     coreUsage: CPUUsage[];
-    processes: Array<{
+    processes?: Array<{
         processName: string;
         processCPU: number;
     }>;
