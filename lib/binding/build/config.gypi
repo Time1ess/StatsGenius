@@ -66,11 +66,7 @@
     "v8_use_snapshot": "true",
     "want_separate_host_toolset": 0,
     "xcode_version": "10.0",
-    "nodedir": "/Users/youchen/.node-gyp/4.0.0",
-    "standalone_static_library": 1,
-    "target": "4.0.0",
-    "disturl": "https://atom.io/download/electron",
-    "runtime": "electron",
-    "build_from_source": "true"
+    "nodedir": "/Users/youchen/.node-gyp/11.10.0",
+    "standalone_static_library": 1
   }
 }

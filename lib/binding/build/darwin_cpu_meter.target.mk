@@ -35,7 +35,6 @@ CFLAGS_CC_Debug := \
 	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
-	-fno-exceptions \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -45,13 +44,13 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/youchen/.node-gyp/4.0.0/include/node \
-	-I/Users/youchen/.node-gyp/4.0.0/src \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/openssl/config \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/openssl/openssl/include \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/uv/include \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/zlib \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/v8/include \
+	-I/Users/youchen/.node-gyp/11.10.0/include/node \
+	-I/Users/youchen/.node-gyp/11.10.0/src \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/openssl/config \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/openssl/openssl/include \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/uv/include \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/zlib \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/v8/include \
 	-I$(srcdir)/../../node_modules/nan
 
 DEFS_Release := \
@@ -84,7 +83,6 @@ CFLAGS_CC_Release := \
 	-std=gnu++1y \
 	-stdlib=libc++ \
 	-fno-rtti \
-	-fno-exceptions \
 	-fno-strict-aliasing
 
 # Flags passed to only ObjC files.
@@ -94,13 +92,13 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/youchen/.node-gyp/4.0.0/include/node \
-	-I/Users/youchen/.node-gyp/4.0.0/src \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/openssl/config \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/openssl/openssl/include \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/uv/include \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/zlib \
-	-I/Users/youchen/.node-gyp/4.0.0/deps/v8/include \
+	-I/Users/youchen/.node-gyp/11.10.0/include/node \
+	-I/Users/youchen/.node-gyp/11.10.0/src \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/openssl/config \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/openssl/openssl/include \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/uv/include \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/zlib \
+	-I/Users/youchen/.node-gyp/11.10.0/deps/v8/include \
 	-I$(srcdir)/../../node_modules/nan
 
 OBJS := \
