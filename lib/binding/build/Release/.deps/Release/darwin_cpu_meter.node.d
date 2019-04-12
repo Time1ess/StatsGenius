@@ -1,1 +1,0 @@
-cmd_Release/darwin_cpu_meter.node := c++ -bundle -undefined dynamic_lookup -Wl,-no_pie -Wl,-search_paths_first -mmacosx-version-min=10.7 -arch x86_64 -L./Release -stdlib=libc++  -o Release/darwin_cpu_meter.node Release/obj.target/darwin_cpu_meter/darwin/cpu.o 
