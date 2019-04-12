@@ -8,12 +8,12 @@ export interface CPUUsage {
 }
 
 export interface ProcessData {
-    processName: string;
-    processCPU: number;
+    pid: number;
+    command: string;
 }
 export interface CPUData {
-    totalUsage: CPUUsage;
+    totalUsage?: CPUUsage;
     /** How much CPU is used w.r.t to CPU cores. */
-    coreUsage: CPUUsage[];
+    coreUsage?: CPUUsage[];
     processes?: ProcessData[];
 }

@@ -78,7 +78,7 @@ unique_ptr<CPUStatistics> CPUStatistics::Get() {
 
   return make_unique<CPUStatistics>(
       make_unique<CPUUsage>(user_total, sys_total, idle_total),
-      move(core_usage), Process::GetProcesses());
+      move(core_usage), Process::GetRunningProcesses());
 }
 
 CPUStatistics::CPUStatistics(unique_ptr<CPUUsage> total_usage,
@@ -91,18 +91,26 @@ CPUStatistics::CPUStatistics(unique_ptr<CPUUsage> total_usage,
 void CPUStatistics::UpdateV8ObjectWithThis(v8::Local<v8::Object>& result) {
   v8::Local<v8::String> total_usage_prop =
       Nan::New("totalUsage").ToLocalChecked();
+  v8::Local<v8::Object> total_usage_value = total_usage_->ToV8Object();
+  Nan::Set(result, total_usage_prop, total_usage_value);
+
   v8::Local<v8::String> core_usage_prop =
       Nan::New("coreUsage").ToLocalChecked();
-
-  v8::Local<v8::Object> total_usage_value = total_usage_->ToV8Object();
   v8::Local<v8::Array> core_usage_value = Nan::New<v8::Array>();
   for (unsigned int i = 0; i < core_usage_.size(); i++) {
     v8::Local<v8::Object> core_usage_value_ = core_usage_[i]->ToV8Object();
     Nan::Set(core_usage_value, i, core_usage_value_);
   }
-
-  Nan::Set(result, total_usage_prop, total_usage_value);
   Nan::Set(result, core_usage_prop, core_usage_value);
+
+  v8::Local<v8::String> processes_prop =
+      Nan::New("processes").ToLocalChecked();
+  v8::Local<v8::Array> processes_value = Nan::New<v8::Array>();
+  for (unsigned int i = 0; i < processes_.size(); i++) {
+    v8::Local<v8::Object> process_value = processes_[i]->ToV8Object();
+    Nan::Set(processes_value, i, process_value);
+  }
+  Nan::Set(result, processes_prop, processes_value);
 }
 }  // namespace CPUMeter
 }  // namespace MacGenius
