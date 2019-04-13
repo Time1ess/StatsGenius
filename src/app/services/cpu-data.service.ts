@@ -38,11 +38,23 @@ export class CpuDataService {
           pid: i,
           commandName: `Process ${i}`,
           command: `${i}`,
-          icon: '',
-          percentCpu: (total - i) * 10,
+          icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz' +
+         'enr0AAABSklEQVRYhWNgGAWDBXz++Hnipw+f/nx8//H/h/cf/' +
+         'sNoZDaIJkYeA39A0J8+gu2' +
+         'YgOGA50+f/3n25Nl/auCnj5/CaWQ2kpo/GA64feP2/' +
+         'zs374AxjA2iicHIesDsm7fhNDIbJg' +
+         '/CGA5QUNf+T088+B0geEzjv7w5qhh/iRwGpokD5Oy1/' +
+         'gtcVv8vla75X0GLzg6QytX6z39f4' +
+         '7/wWo3/Aqc1/ovO06SvA0QWaP4X3qbxX0FDG4zlTOgcAjJ+wOC/' +
+         'oAHGEnVA3+sMQBqQ19X+' +
+         'L1mq+V/wvPp/od0adE4DKVr/ZR0hbMkczf98T9T/K2jS0QGiUyCW8t9Q/y9wW/2/' +
+         'RA2dEyE4CgyA5cBZjf9ydloomujmABAe0IIIjHW0yDacOg6gMR51wKgDRh2AxQE6f+' +
+         'jnAB3' +
+         'MVrGihs5E+jhC54+Spg5mv2AUjFgAAH/+wdnTEexFAAAAAElFTkSuQmCC',
+          percentCpu: (total - i) * 10 * Math.random(),
         });
       }
-      return res.sort((x, y) => y.pid - x.pid);
+      return res.sort((x, y) => y.percentCpu - x.percentCpu);
     };
     if (!this.electronService.isElectron()) {
       timer(0, 1000).subscribe(() => {

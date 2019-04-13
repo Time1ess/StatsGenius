@@ -5,7 +5,6 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CpuDataService } from '../../services/cpu-data.service';
 import { CPUData } from '../../../interfaces/cpu';
-import { IconService } from '../../services/icon.service';
 
 @Component({
   selector: 'app-cpu-dropdown',
@@ -123,7 +122,6 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
 
   constructor(
     readonly cpuDataService: CpuDataService,
-    readonly iconService: IconService,
   ) { }
 
   ngOnInit() {
