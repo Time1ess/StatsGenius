@@ -1,6 +1,8 @@
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <algorithm>
 #include <stdexcept>
 #include <unordered_map>
 #include <unordered_set>
@@ -16,7 +18,7 @@ size_t GetMaxArgumentLength() {
   if (MaxArgumentLength != MAX_ARGUMENT_LENGTH_UNSET) {
     return MaxArgumentLength;
   }
-  size_t size = sizeof(int);
+  size_t size = sizeof(size_t);
 
   /* Get the maximum process arguments size. */
   static int mib[2] = {CTL_KERN, KERN_ARGMAX};
@@ -28,10 +30,11 @@ size_t GetMaxArgumentLength() {
 
 string GetCommandFromProc(const kinfo_proc* k) {
   size_t size = GetMaxArgumentLength();
-  vector<char> procargs(size);
+  static vector<char> procargs;
+  procargs.resize(size);
 
   int mib[3] = {CTL_KERN, KERN_PROCARGS2, k->kp_proc.p_pid};
-  if (sysctl(mib, 3, procargs.data(), &size, NULL, 0) == -1) {
+  if (sysctl(mib, 3, procargs.data(), &size, nullptr, 0) == -1) {
     return string(k->kp_proc.p_comm);
   }
 
@@ -122,17 +125,19 @@ namespace CPUMeter {
 
 static unordered_map<int, unique_ptr<Process>> processes;
 int Process::num_cpus_ = 0;
-CPUUsage const* Process::total_usage_ {};
+CPUUsage const* Process::total_usage_{};
 
-Process::Process(kinfo_proc proc)
-    : proc_{move(proc)} {
-  command_ = GetCommandFromProc(&proc_);
+Process::Process(kinfo_proc proc) : proc_{move(proc)} {}
+
+void Process::Prepare() {
+  if (command_.empty()) {
+    command_ = GetCommandFromProc(&proc_);
+  }
 }
 
 vector<const Process*> Process::GetRunningProcesses(int num_cpus,
                                                     const CPUUsage* total_usage,
-                                                    int max_num) {
-
+                                                    size_t max_num) {
   Process::num_cpus_ = num_cpus;
   Process::total_usage_ = total_usage;
   int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0};
@@ -152,9 +157,13 @@ vector<const Process*> Process::GetRunningProcesses(int num_cpus,
 
   unordered_set<int> new_pids;
   for (kinfo_proc& p : procs) {
-    unique_ptr<Process> proc = make_unique<Process>(p);
-    new_pids.insert(proc->GetPid());
-    auto it = processes.find(proc->GetPid());
+    if (p.kp_proc.p_pid < 1) {
+      continue;
+    }
+    unique_ptr<Process> proc = make_unique<Process>(move(p));
+    auto pid = proc->GetPid();
+    new_pids.insert(pid);
+    auto it = processes.find(pid);
     if (it != processes.end()) {
       if (it->second->GetCommand() != proc->GetCommand()) {
         // Replace
@@ -166,23 +175,29 @@ vector<const Process*> Process::GetRunningProcesses(int num_cpus,
       continue;
     }
     // Insert
-    processes[proc->GetPid()] = move(proc);
+    processes[pid] = move(proc);
   }
-  vector<const Process*> results;
   // Cleanup
+  vector<Process*> cands;
   for (auto it = processes.begin(); it != processes.end();) {
     if (new_pids.find(it->first) == new_pids.end()) {
       it = processes.erase(it);
     } else {
-      results.push_back(it->second.get());
+      cands.push_back(it->second.get());
       it++;
     }
   }
-  // Sort and trim
-  sort(results.begin(), results.end(), [](const Process* a, const Process* b) {
+  // Sort by CPU ASC.
+  sort(cands.begin(), cands.end(), [](const Process* a, const Process* b) {
     return a->GetPercentCpu() > b->GetPercentCpu();
   });
+
+  vector<const Process*> results;
   results.resize(max_num);
+  for (size_t i = 0; i < min(max_num, cands.size()); i++) {
+    cands[i]->Prepare();
+    results[i] = cands[i];
+  }
   return results;
 }
 
@@ -197,7 +212,8 @@ void Process::Update() {
       percent_cpu_ =
           1.0 * diff * num_cpus_ /
           ((total_usage_->user_cpu_ticks + total_usage_->system_cpu_ticks +
-           total_usage_->idle_cpu_ticks) * 100000.0);
+            total_usage_->idle_cpu_ticks) *
+           100000.0);
     }
 
     utime_ = pti.pti_total_system;
@@ -243,7 +259,8 @@ v8::Local<v8::Object> Process::ToV8Object() const {
   v8::Local<v8::String> command_name_prop =
       Nan::New("commandName").ToLocalChecked();
   v8::Local<v8::String> icon_prop = Nan::New("icon").ToLocalChecked();
-  v8::Local<v8::String> percent_cpu_prop = Nan::New("percentCpu").ToLocalChecked();
+  v8::Local<v8::String> percent_cpu_prop =
+      Nan::New("percentCpu").ToLocalChecked();
 
   v8::Local<v8::Value> pid_value = Nan::New(GetPid());
   v8::Local<v8::Value> command_value = Nan::New(GetCommand()).ToLocalChecked();

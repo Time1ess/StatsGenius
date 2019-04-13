@@ -28,8 +28,8 @@ class StatusBarItem {
     }
 
     private createTray() {
-        this.tray = new Tray(path.join(__dirname, '..', 'assets', 'images', 'icon.png'));
-        this.tray.setToolTip('Mac Genius');
+        this.tray = new Tray(path.join(__dirname, '..', 'assets', 'images', 'magic-lamp_16x16.png'));
+        this.tray.setToolTip('MacGenius');
         this.tray.on('click', this.onClick.bind(this));
     }
 

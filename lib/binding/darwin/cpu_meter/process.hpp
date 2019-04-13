@@ -17,8 +17,9 @@ namespace CPUMeter {
 
 class Process {
  public:
-  static vector<const Process*> GetRunningProcesses(int num_cpus, const CPUUsage* total_usage, int max_num = 8);
+  static vector<const Process*> GetRunningProcesses(int num_cpus, const CPUUsage* total_usage, size_t max_num = 8);
   Process(kinfo_proc proc);
+  void Prepare();
   void Update();
 
   v8::Local<v8::Object> ToV8Object() const;

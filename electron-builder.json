@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "mac-genius",
   "directories": {
     "output": "release/"
   },
@@ -19,9 +19,9 @@
         "!tsconfig.json",
         "!tslint.json",
         "!lib",
-        "lib/binding/build/Release",
-        "src/electron",
-        "src/interfaces"
+        "!assets",
+        "!.vscode",
+        "lib/binding/build/Release"
     ],
   "win": {
     "icon": "dist",
