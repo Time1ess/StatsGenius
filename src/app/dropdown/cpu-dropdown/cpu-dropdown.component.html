@@ -54,10 +54,10 @@
   <div fxLayout="column" *ngIf="cpuData.processes">
     <div fxLayout="row" fxLayoutAlign="space-between start" *ngFor="let process of cpuData.processes">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
-        <img class="icon" src="{{ iconService.getIconForProcess(process.processName) | async }}">
-        <span>{{ process.processName }}</span>
+        <img class="icon" src="{{ process.icon }}">
+        <span>{{ (process.commandName.length > 20) ? (process.commandName | slice:0:20)+'...' : (process.commandName) }}</span>
       </div>
-      <span>{{ process.processCPU | number:'1.0-1' }}%</span>
+      <span>{{ process.percentCpu | number:'1.1-1' }}%</span>
     </div>
   </div>
 

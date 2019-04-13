@@ -45,9 +45,8 @@ unique_ptr<CPUStatistics> CPUStatistics::Get() {
   if (!CPUStatistics::initialized_) {
     throw runtime_error{"CPUStatistics has not been initialized"};
   }
-  unsigned int num_cpus;
 
-  num_cpus = GetCPUInfo(&cur_cpu_load_info_);
+  unsigned int num_cpus = GetCPUInfo(&cur_cpu_load_info_);
 
   unsigned int user_total = 0, sys_total = 0, idle_total = 0, nice_total = 0,
                total = 0;
@@ -76,19 +75,22 @@ unique_ptr<CPUStatistics> CPUStatistics::Get() {
   FreeCPULoadInfo(&prev_cpu_load_info_);
   prev_cpu_load_info_ = cur_cpu_load_info_;
 
-  return make_unique<CPUStatistics>(
-      make_unique<CPUUsage>(user_total, sys_total, idle_total),
-      move(core_usage), Process::GetRunningProcesses());
+  auto total_usage = make_unique<CPUUsage>(user_total, sys_total, idle_total);
+
+  return make_unique<CPUStatistics>(num_cpus, move(total_usage),
+                                    move(core_usage));
 }
 
-CPUStatistics::CPUStatistics(unique_ptr<CPUUsage> total_usage,
-                             vector<unique_ptr<CPUUsage>> core_usage,
-                             vector<unique_ptr<Process>> processes)
-    : total_usage_{move(total_usage)},
-      core_usage_{move(core_usage)},
-      processes_{move(processes)} {}
+CPUStatistics::CPUStatistics(int num_cpus, unique_ptr<CPUUsage> total_usage,
+                             vector<unique_ptr<CPUUsage>> core_usage)
+    : num_cpus_{num_cpus},
+      total_usage_{move(total_usage)},
+      core_usage_{move(core_usage)} {
+  processes_ = Process::GetRunningProcesses(num_cpus_, total_usage_.get());
+}
 
-void CPUStatistics::UpdateV8ObjectWithThis(v8::Local<v8::Object>& result) {
+v8::Local<v8::Object> CPUStatistics::ToV8ObjectWithThis() {
+  v8::Local<v8::Object> result = Nan::New<v8::Object>();
   v8::Local<v8::String> total_usage_prop =
       Nan::New("totalUsage").ToLocalChecked();
   v8::Local<v8::Object> total_usage_value = total_usage_->ToV8Object();
@@ -103,14 +105,15 @@ void CPUStatistics::UpdateV8ObjectWithThis(v8::Local<v8::Object>& result) {
   }
   Nan::Set(result, core_usage_prop, core_usage_value);
 
-  v8::Local<v8::String> processes_prop =
-      Nan::New("processes").ToLocalChecked();
+  v8::Local<v8::String> processes_prop = Nan::New("processes").ToLocalChecked();
   v8::Local<v8::Array> processes_value = Nan::New<v8::Array>();
   for (unsigned int i = 0; i < processes_.size(); i++) {
     v8::Local<v8::Object> process_value = processes_[i]->ToV8Object();
     Nan::Set(processes_value, i, process_value);
   }
   Nan::Set(result, processes_prop, processes_value);
+
+  return result;
 }
 }  // namespace CPUMeter
 }  // namespace MacGenius

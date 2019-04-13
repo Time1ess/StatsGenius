@@ -23,7 +23,7 @@ var CPUMonitor = /** @class */ (function (_super) {
         _this.data$ = new rxjs_1.Subject();
         _this.data = _this.data$;
         rxjs_1.interval(2000).subscribe(function () {
-            var rawLoadInfo = CPUMeter.GetCPULoadInfo();
+            var rawLoadInfo = CPUMeter.GetCPUStatistics();
             if (!rawLoadInfo) {
                 return;
             }

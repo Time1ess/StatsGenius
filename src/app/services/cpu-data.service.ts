@@ -35,11 +35,14 @@ export class CpuDataService {
       const res: ProcessData[] = [];
       for (let i = 0; i < total; i++) {
         res.push({
-          processName: `Process ${i}`,
-          processCPU: 150 * Math.random(),
+          pid: i,
+          commandName: `Process ${i}`,
+          command: `${i}`,
+          icon: '',
+          percentCpu: (total - i) * 10,
         });
       }
-      return res.sort((x, y) => y.processCPU - x.processCPU);
+      return res.sort((x, y) => y.pid - x.pid);
     };
     if (!this.electronService.isElectron()) {
       timer(0, 1000).subscribe(() => {

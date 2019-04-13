@@ -16,15 +16,16 @@ namespace CPUMeter {
 class CPUStatistics {
  public:
   static unique_ptr<CPUStatistics> Get();
-  CPUStatistics(unique_ptr<CPUUsage>, vector<unique_ptr<CPUUsage>>, vector<unique_ptr<Process>>);
+  CPUStatistics(int num_cpus, unique_ptr<CPUUsage>, vector<unique_ptr<CPUUsage>>);
   static void Initialize();
 
-  void UpdateV8ObjectWithThis(v8::Local<v8::Object>& result);
+  v8::Local<v8::Object> ToV8ObjectWithThis();
 
  private:
+  int num_cpus_ {0};
   unique_ptr<CPUUsage> total_usage_ {};
   vector<unique_ptr<CPUUsage>> core_usage_;
-  vector<unique_ptr<Process>> processes_;
+  vector<const Process*> processes_;
 
   static processor_cpu_load_info_t prev_cpu_load_info_, cur_cpu_load_info_;
   static bool initialized_;

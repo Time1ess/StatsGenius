@@ -9,7 +9,10 @@ export interface CPUUsage {
 
 export interface ProcessData {
     pid: number;
+    commandName: string;
     command: string;
+    icon: string;
+    percentCpu: number;
 }
 export interface CPUData {
     totalUsage?: CPUUsage;

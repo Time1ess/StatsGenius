@@ -13,7 +13,7 @@ export class CPUMonitor extends EventEmitter {
         super();
         this.data = this.data$;
         interval(2000).subscribe(() => {
-            const rawLoadInfo: CPUData = CPUMeter.GetCPUStatisticsInfo();
+            const rawLoadInfo: CPUData = CPUMeter.GetCPUStatistics();
             if (!rawLoadInfo) {
                 return;
             }

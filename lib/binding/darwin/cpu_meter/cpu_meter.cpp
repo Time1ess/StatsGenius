@@ -7,11 +7,11 @@ using namespace MacGenius::CPUMeter;
 
 NAN_METHOD(GetCPUStatistics) {
   unique_ptr<CPUStatistics> cpuStatistics = CPUStatistics::Get();
-  v8::Local<v8::Object> result = Nan::New<v8::Object>();
-  if (cpuStatistics) {
-    cpuStatistics->UpdateV8ObjectWithThis(result);
+  if (!cpuStatistics) {
+    info.GetReturnValue().Set(Nan::Null());
+    return;
   }
-
+  auto result = cpuStatistics->ToV8ObjectWithThis();
   info.GetReturnValue().Set(result);
 }
 
