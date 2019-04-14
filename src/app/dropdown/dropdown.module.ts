@@ -1,18 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../dropdown/dropdown.component';
-import { RouterModule } from '@angular/router';
-import {
-  MatDividerModule,
-  MatCardModule,
-  MatIconModule,
-  MatListModule,
-} from '@angular/material';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { NgxEchartsModule } from 'ngx-echarts';
 
 import { CPUDropdownComponent } from './cpu-dropdown/cpu-dropdown.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -20,14 +11,7 @@ import { CPUDropdownComponent } from './cpu-dropdown/cpu-dropdown.component';
     CPUDropdownComponent,
   ],
   imports: [
-    CommonModule,
-    RouterModule,
-    FlexLayoutModule,
-    NgxEchartsModule,
-    MatCardModule,
-    MatDividerModule,
-    MatIconModule,
-    MatListModule,
+    SharedModule,
   ]
 })
 export class DropdownModule { }

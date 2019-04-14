@@ -67,6 +67,7 @@ void CPUStatistics::Prepare() {
   UpdateCPUUsages();
   UpdateAverageLoad();
   UpdateCPUTemperature();
+  UpdateUptime();
   processes_ = Process::GetRunningProcesses(num_cpus_, total_usage_.get());
 }
 
@@ -118,6 +119,16 @@ void CPUStatistics::UpdateCPUUsages() {
   total_usage_ = make_unique<CPUUsage>(user_total, sys_total, idle_total);
 }
 
+void CPUStatistics::UpdateUptime() {
+  static int mib[2] = {CTL_KERN, KERN_BOOTTIME};
+  struct timeval boot_time;
+  size_t size = sizeof(boot_time);
+  if (sysctl(mib, 2, &boot_time, &size, nullptr, 0) == -1) {
+    throw runtime_error{"Failed to get boot time."};
+  }
+  uptime_ = time(nullptr) - boot_time.tv_sec;
+}
+
 v8::Local<v8::Object> CPUStatistics::ToV8ObjectWithThis() {
   v8::Local<v8::Object> result = Nan::New<v8::Object>();
 
@@ -135,6 +146,11 @@ v8::Local<v8::Object> CPUStatistics::ToV8ObjectWithThis() {
       Nan::New("cpuTemperature").ToLocalChecked();
   v8::Local<v8::Value> cpu_temperature_value = Nan::New(cpu_temperature_);
   Nan::Set(result, cpu_temperature_prop, cpu_temperature_value);
+
+  v8::Local<v8::String> uptime_prop =
+      Nan::New("uptime").ToLocalChecked();
+  v8::Local<v8::Value> uptime_value = Nan::New(uptime_);
+  Nan::Set(result, uptime_prop, uptime_value);
 
   v8::Local<v8::String> core_usage_prop =
       Nan::New("coreUsage").ToLocalChecked();

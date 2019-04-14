@@ -37,8 +37,8 @@ var StatusBarItem = /** @class */ (function () {
             _this.window.hide();
         });
         this.window.setVisibleOnAllWorkspaces(true);
+        this.window.webContents.openDevTools();
         if (isDev) {
-            this.window.webContents.openDevTools();
             this.window.loadURL('http://localhost:4200/');
         }
         else {

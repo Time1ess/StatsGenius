@@ -29,12 +29,14 @@ class CPUStatistics {
   void UpdateCPUUsages();
   void UpdateAverageLoad();
   void UpdateCPUTemperature();
+  void UpdateUptime();
 
   unique_ptr<CPUUsage> total_usage_ {};
   unique_ptr<CPULoad> cpu_load_ {};
   vector<unique_ptr<CPUUsage>> core_usage_;
   float cpu_temperature_ {0};
   vector<const Process*> processes_;
+  unsigned int uptime_ {0};
 
   static size_t num_cpus_;
   static processor_cpu_load_info_t prev_cpu_load_info_, cur_cpu_load_info_;

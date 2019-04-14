@@ -12,13 +12,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { ElectronService } from './services/electron.service';
-
 import { WebviewDirective } from './directives/webview.directive';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { DropdownModule } from './dropdown/dropdown.module';
+import { CPUDataService, CPUTestDataService } from './shared/services/cpu-data.service';
+import { AppConfig } from '../environments/environment';
+import { SharedModule } from './shared/shared.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -44,9 +45,15 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
 
+    SharedModule,
     DropdownModule,
   ],
-  providers: [ElectronService],
+  providers: [
+    {
+      provide: CPUDataService,
+      useClass: AppConfig.production ? CPUDataService : CPUTestDataService,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

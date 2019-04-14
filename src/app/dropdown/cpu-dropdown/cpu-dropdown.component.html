@@ -43,7 +43,7 @@
 
   <div fxLayout="row" fxLayoutAlign="space-between start">
     <span>CPU Temperature</span>
-    <span>60°</span>
+    <span>{{ cpuData.cpuTemperature }}°</span>
   </div>
 
   <mat-divider></mat-divider>
@@ -61,4 +61,37 @@
     </div>
   </div>
 
+  <mat-divider></mat-divider>
+  <span class="title" fxLayout="row" fxLayoutAlign="center">
+    LOAD AVERAGE
+  </span>
+
+  <div fxLayout="row" fxFlex="1 1 20%" fxLayoutAlign="space-between stretch">
+    <div echarts [options]="averageLoadOptions" (chartInit)="onAverageLoadChartInit($event)" fxFlex="1 1 100%"></div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between start">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-icon class="rounded blue">stop</mat-icon>
+      <span>{{ cpuData.averageLoad.loadLast1Minute | number:'1.0-2' }}</span>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-icon class="rounded red">stop</mat-icon>
+      <span>{{ cpuData.averageLoad.loadLast5Minutes | number:'1.0-2' }}</span>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-icon class="rounded gray">stop</mat-icon>
+      <span>{{ cpuData.averageLoad.loadLast15Minutes | number:'1.0-2' }}</span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+  <span class="title" fxLayout="row" fxLayoutAlign="center">
+    UPTIME
+  </span>
+
+  <div fxLayout="row" fxLayoutAlign="start start">
+    <span>{{ cpuData?.uptime | duration }}</span>
+  </div>
 </div>

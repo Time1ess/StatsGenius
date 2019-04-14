@@ -7,6 +7,12 @@ export interface CPUUsage {
     idleCPU: number;
 }
 
+export interface CPULoad {
+    loadLast1Minute: number;
+    loadLast5Minutes: number;
+    loadLast15Minutes: number;
+}
+
 export interface ProcessData {
     pid: number;
     commandName: string;
@@ -14,9 +20,13 @@ export interface ProcessData {
     icon: string;
     percentCPU: number;
 }
+
 export interface CPUData {
     totalUsage?: CPUUsage;
     /** How much CPU is used w.r.t to CPU cores. */
     coreUsage?: CPUUsage[];
     processes?: ProcessData[];
+    averageLoad?: CPULoad;
+    cpuTemperature?: number;
+    uptime?: number;
 }

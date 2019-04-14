@@ -53,6 +53,7 @@ try {
   app.on('ready', () => {
     // createWindow();
     createStatusBar();
+    app.dock.hide();
   });
 
   // Quit when all windows are closed.
