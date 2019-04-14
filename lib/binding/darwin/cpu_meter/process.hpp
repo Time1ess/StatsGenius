@@ -27,7 +27,7 @@ class Process {
   string GetCommandName() const;
   string GetCommand() const;
   string GetBase64Icon() const;
-  double GetPercentCPU() const;
+  float GetPercentCPU() const;
 
  private:
   Process() = default;
@@ -35,7 +35,7 @@ class Process {
   kinfo_proc proc_;
   unsigned int utime_ {0};
   unsigned int stime_ {0};
-  double percent_cpu_ {0};
+  float percent_cpu_ {0};
 
   static int num_cpus_;
   static CPUUsage const* total_usage_;

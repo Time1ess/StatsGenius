@@ -20,6 +20,7 @@ class CPUStatistics {
   static unique_ptr<CPUStatistics> Get();
   CPUStatistics();
   static void Initialize();
+  static void Destroy();
 
   v8::Local<v8::Object> ToV8ObjectWithThis();
 
@@ -32,7 +33,7 @@ class CPUStatistics {
   unique_ptr<CPUUsage> total_usage_ {};
   unique_ptr<CPULoad> cpu_load_ {};
   vector<unique_ptr<CPUUsage>> core_usage_;
-  double cpu_temperature_ {-1};
+  float cpu_temperature_ {0};
   vector<const Process*> processes_;
 
   static size_t num_cpus_;

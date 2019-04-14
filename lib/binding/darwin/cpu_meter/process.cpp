@@ -233,7 +233,7 @@ string Process::GetCommandName() const {
 
 string Process::GetCommand() const { return command_; }
 
-double Process::GetPercentCPU() const { return percent_cpu_; }
+float Process::GetPercentCPU() const { return percent_cpu_; }
 
 string Process::GetBase64Icon() const {
   return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz"

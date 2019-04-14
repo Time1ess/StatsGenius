@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include "cpu_statistics.hpp"
+#include "../third_party/libsmc/smc.hpp"
 
 namespace {
 size_t GetCPUInfo(processor_cpu_load_info_t* p) {
@@ -40,7 +41,13 @@ size_t CPUStatistics::num_cpus_;
 
 void CPUStatistics::Initialize() {
   GetCPUInfo(&prev_cpu_load_info_);
+  MacGenius::Mac::SMC::Initialize();
   initialized_ = true;
+}
+
+void CPUStatistics::Destroy() {
+  MacGenius::Mac::SMC::Destroy();
+  initialized_ = false;
 }
 
 CPUStatistics::CPUStatistics() {}
@@ -64,6 +71,14 @@ void CPUStatistics::Prepare() {
 }
 
 void CPUStatistics::UpdateCPUTemperature() {
+  // This is slow, with this step, the call time increases from ~2ms to 100+ms.
+  // Consider only retrieve this in <Temperature Meter Section>
+  vector<pair<string, int>> temps = MacGenius::Mac::SMC::SMCGetCPUTemperatures();
+  float sum = 0;
+  for (auto& temp : temps) {
+    sum += temp.second;
+  }
+  cpu_temperature_ = 1.0 * sum / temps.size();
 }
 
 void CPUStatistics::UpdateAverageLoad() {
