@@ -3,7 +3,7 @@ import { EChartOption, ECharts } from 'echarts';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CpuDataService } from '../../services/cpu-data.service';
+import { CPUDataService } from '../../services/cpu-data.service';
 import { CPUData } from '../../../interfaces/cpu';
 
 @Component({
@@ -121,7 +121,7 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   private coreUsageChart: ECharts;
 
   constructor(
-    readonly cpuDataService: CpuDataService,
+    readonly cpuDataService: CPUDataService,
   ) { }
 
   ngOnInit() {
@@ -137,7 +137,7 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
 
   update(data: CPUData) {
     this.updateData(data);
-    this.updateCpuUsageChart();
+    this.updateCPUUsageChart();
     this.updateCoreUsageChart();
   }
 
@@ -153,11 +153,11 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCpuUsageChartInit(event: ECharts) {
+  onCPUUsageChartInit(event: ECharts) {
     this.cpuUsageChart = event;
   }
 
-  updateCpuUsageChart() {
+  updateCPUUsageChart() {
     if (!this.cpuUsageChart) {
       return;
     }

@@ -3,17 +3,10 @@
         {
             "target_name": "darwin_cpu_meter",
             "headers": [
-                "darwin/cpu_meter/cpu_statistics.hpp",
-                "darwin/cpu_meter/cpu_usage.hpp",
-                "darwin/cpu_meter/cpu_load.hpp",
-                "darwin/cpu_meter/process.hpp",
+                '<!@(ls -1 darwin/cpu_meter/*.hpp)',
             ],
             "sources": [
-                "darwin/cpu_meter/cpu_statistics.cpp",
-                "darwin/cpu_meter/cpu_usage.cpp",
-                "darwin/cpu_meter/cpu_load.cpp",
-                "darwin/cpu_meter/process.cpp",
-                "darwin/cpu_meter/cpu_meter.cpp",
+                '<!@(ls -1 darwin/cpu_meter/*.cpp)',
             ],
             "include_dirs": [
                 "<!(node -e \"require('nan')\")"

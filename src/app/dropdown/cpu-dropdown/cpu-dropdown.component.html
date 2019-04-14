@@ -4,7 +4,7 @@
     CPU
   </span>
   <div fxLayout="row" fxFlex="1 1 12%" fxLayoutAlign="space-between stretch">
-    <div echarts [options]="cpuUsageOptions" (chartInit)="onCpuUsageChartInit($event)" fxFlex="1 1 84%"></div>
+    <div echarts [options]="cpuUsageOptions" (chartInit)="onCPUUsageChartInit($event)" fxFlex="1 1 84%"></div>
     <div echarts [options]="coreUsageOptions" (chartInit)="onCoreUsageChartInit($event)" fxFlex="1 1 15%"></div>
   </div>
 
@@ -57,7 +57,7 @@
         <img class="icon" src="{{ process.icon }}">
         <span>{{ (process.commandName.length > 20) ? (process.commandName | slice:0:20)+'...' : (process.commandName) }}</span>
       </div>
-      <span>{{ process.percentCpu | number:'1.1-1' }}%</span>
+      <span>{{ process.percentCPU | number:'1.1-1' }}%</span>
     </div>
   </div>
 

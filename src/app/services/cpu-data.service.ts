@@ -7,7 +7,7 @@ import { ElectronService } from './electron.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CpuDataService {
+export class CPUDataService {
   public cpuData: Observable<CPUData>;
 
   private cpuData$ = new Subject<CPUData>();
@@ -51,10 +51,10 @@ export class CpuDataService {
          'RA2dEyE4CgyA5cBZjf9ydloomujmABAe0IIIjHW0yDacOg6gMR51wKgDRh2AxQE6f+' +
          'jnAB3' +
          'MVrGihs5E+jhC54+Spg5mv2AUjFgAAH/+wdnTEexFAAAAAElFTkSuQmCC',
-          percentCpu: (total - i) * 10 * Math.random(),
+          percentCPU: (total - i) * 10 * Math.random(),
         });
       }
-      return res.sort((x, y) => y.percentCpu - x.percentCpu);
+      return res.sort((x, y) => y.percentCPU - x.percentCPU);
     };
     if (!this.electronService.isElectron()) {
       timer(0, 1000).subscribe(() => {

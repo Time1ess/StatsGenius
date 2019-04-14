@@ -189,7 +189,7 @@ vector<const Process*> Process::GetRunningProcesses(int num_cpus,
   }
   // Sort by CPU ASC.
   sort(cands.begin(), cands.end(), [](const Process* a, const Process* b) {
-    return a->GetPercentCpu() > b->GetPercentCpu();
+    return a->GetPercentCPU() > b->GetPercentCPU();
   });
 
   vector<const Process*> results;
@@ -233,7 +233,7 @@ string Process::GetCommandName() const {
 
 string Process::GetCommand() const { return command_; }
 
-double Process::GetPercentCpu() const { return percent_cpu_; }
+double Process::GetPercentCPU() const { return percent_cpu_; }
 
 string Process::GetBase64Icon() const {
   return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz"
@@ -260,14 +260,14 @@ v8::Local<v8::Object> Process::ToV8Object() const {
       Nan::New("commandName").ToLocalChecked();
   v8::Local<v8::String> icon_prop = Nan::New("icon").ToLocalChecked();
   v8::Local<v8::String> percent_cpu_prop =
-      Nan::New("percentCpu").ToLocalChecked();
+      Nan::New("percentCPU").ToLocalChecked();
 
   v8::Local<v8::Value> pid_value = Nan::New(GetPid());
   v8::Local<v8::Value> command_value = Nan::New(GetCommand()).ToLocalChecked();
   v8::Local<v8::Value> command_name_value =
       Nan::New(GetCommandName()).ToLocalChecked();
   v8::Local<v8::Value> icon_value = Nan::New(GetBase64Icon()).ToLocalChecked();
-  v8::Local<v8::Value> percent_cpu_value = Nan::New(GetPercentCpu());
+  v8::Local<v8::Value> percent_cpu_value = Nan::New(GetPercentCPU());
 
   Nan::Set(result, pid_prop, pid_value);
   Nan::Set(result, command_prop, command_value);

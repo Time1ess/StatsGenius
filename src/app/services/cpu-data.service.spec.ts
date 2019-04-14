@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CpuDataService } from './cpu-data.service';
+import { CPUDataService } from './cpu-data.service';
 
-describe('CpuDataService', () => {
+describe('CPUDataService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CpuDataService = TestBed.get(CpuDataService);
+    const service: CPUDataService = TestBed.get(CPUDataService);
     expect(service).toBeTruthy();
   });
 });

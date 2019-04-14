@@ -27,7 +27,7 @@ class Process {
   string GetCommandName() const;
   string GetCommand() const;
   string GetBase64Icon() const;
-  double GetPercentCpu() const;
+  double GetPercentCPU() const;
 
  private:
   Process() = default;

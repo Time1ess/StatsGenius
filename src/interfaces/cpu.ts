@@ -12,7 +12,7 @@ export interface ProcessData {
     commandName: string;
     command: string;
     icon: string;
-    percentCpu: number;
+    percentCPU: number;
 }
 export interface CPUData {
     totalUsage?: CPUUsage;

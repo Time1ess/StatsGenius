@@ -59,7 +59,11 @@ unique_ptr<CPUStatistics> CPUStatistics::Get() {
 void CPUStatistics::Prepare() {
   UpdateCPUUsages();
   UpdateAverageLoad();
+  UpdateCPUTemperature();
   processes_ = Process::GetRunningProcesses(num_cpus_, total_usage_.get());
+}
+
+void CPUStatistics::UpdateCPUTemperature() {
 }
 
 void CPUStatistics::UpdateAverageLoad() {
@@ -111,6 +115,11 @@ v8::Local<v8::Object> CPUStatistics::ToV8ObjectWithThis() {
       Nan::New("averageLoad").ToLocalChecked();
   v8::Local<v8::Object> average_load_value = cpu_load_->ToV8Object();
   Nan::Set(result, average_load_prop, average_load_value);
+
+  v8::Local<v8::String> cpu_temperature_prop =
+      Nan::New("cpuTemperature").ToLocalChecked();
+  v8::Local<v8::Value> cpu_temperature_value = Nan::New(cpu_temperature_);
+  Nan::Set(result, cpu_temperature_prop, cpu_temperature_value);
 
   v8::Local<v8::String> core_usage_prop =
       Nan::New("coreUsage").ToLocalChecked();
