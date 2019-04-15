@@ -36,7 +36,7 @@ export class CPUTestDataService {
 
   constructor() {
     this.cpuData = this.cpuData$;
-    timer(0, 2000).subscribe(() => {
+    timer(0, 100).subscribe(() => {
       this.cpuData$.next({
         totalUsage: this.genUsage(),
         coreUsage: this.genUsages(8),

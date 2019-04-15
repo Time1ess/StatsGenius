@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
@@ -20,6 +20,7 @@ export class ElectronService {
 
   constructor(
     private router: Router,
+    private zone: NgZone,
   ) {
     // Conditional imports
     if (this.isElectron()) {
@@ -32,7 +33,9 @@ export class ElectronService {
 
       // Listen events from main.
       this.ipcRenderer.on('navigate-to-route', (event, url) => {
-        this.router.navigateByUrl(url);
+        this.zone.run(() => {
+          this.router.navigateByUrl(url);
+        });
       });
     }
   }

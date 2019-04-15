@@ -51,7 +51,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     {
       provide: CPUDataService,
-      useClass: AppConfig.production ? CPUDataService : CPUTestDataService,
+      useClass: true || AppConfig.production ? CPUDataService : CPUTestDataService,
     },
   ],
   bootstrap: [AppComponent]

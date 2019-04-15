@@ -10,7 +10,7 @@ export class CPUMonitor {
 
     constructor() {
         this.data = this.data$;
-        interval(2000).subscribe(() => {
+        interval(3000).subscribe(() => {
             const rawLoadInfo: CPUData = CPUMeter.GetCPUStatistics();
             this.data$.next(rawLoadInfo);
         });

@@ -46,6 +46,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           shadowBlur: 1,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
       {
         data: [],
@@ -63,6 +65,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           shadowBlur: 1,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
     ],
     grid: {
@@ -94,6 +98,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           color: this.COLOR_BLUE,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
       {
         data: [],
@@ -102,6 +108,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           color: this.COLOR_RED,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
     ],
     grid: {
@@ -150,6 +158,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           shadowBlur: 1,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
       {
         data: [],
@@ -161,6 +171,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           color: this.COLOR_RED,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
       {
         data: [],
@@ -172,6 +184,8 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
           color: this.COLOR_GRAY,
         },
         silent: true,
+        animation: false,
+        sampling: 'average',
       },
     ],
     grid: {
@@ -228,7 +242,7 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     this.historyLoadLast1Minute.push(this.cpuData.averageLoad.loadLast1Minute);
     this.historyLoadLast5Minutes.push(this.cpuData.averageLoad.loadLast5Minutes);
     this.historyLoadLast15Minutes.push(this.cpuData.averageLoad.loadLast15Minutes);
-    if (this.historyLabel.length > 900) {
+    if (this.historyLabel.length > 200) {
       this.historyLabel.shift();
       this.historyUserCPU.shift();
       this.historySystemCPU.shift();

@@ -31,7 +31,8 @@ var StatusBarItem = /** @class */ (function () {
             resizable: false,
             show: false,
             frame: false,
-            width: 280,
+            width: 1000,
+            height: 1000,
         });
         this.window.on('blur', function () {
             _this.window.hide();
