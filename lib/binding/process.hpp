@@ -1,5 +1,6 @@
 #pragma once
 
+#include <nan.h>
 #include <sys/types.h>
 #include <string>
 #include <vector>
@@ -16,5 +17,5 @@ struct Process {
     float percent_cpu;
 };
 
-void ExportedGetProcesses();
+NAN_METHOD(V8GetProcesses);
 }

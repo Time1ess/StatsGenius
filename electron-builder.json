@@ -21,7 +21,8 @@
         "!lib",
         "!assets",
         "!.vscode",
-        "lib/binding/build/Release"
+        "lib/binding/build/Release/genius-bindings.node",
+        "lib/binding/genius.js"
     ],
   "win": {
     "icon": "dist",

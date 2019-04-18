@@ -1,7 +1,7 @@
-#include <nan.h>
 #include <iostream>
 
 #include "process.hpp"
+
 #ifdef __APPLE__
 #include "darwin/process.hpp"
 using namespace MacGenius::Darwin;
@@ -40,9 +40,8 @@ v8::Local<v8::Object> ProcessToV8Object(Process& p) {
   return result;
 }
 
-NAN_METHOD(ExportedGetProcesses) {
-  vector<Process> processes;
-  processes = GetProcesses();
+NAN_METHOD(V8GetProcesses) {
+  vector<Process> processes(GetProcesses());
   v8::Local<v8::Array> results = Nan::New<v8::Array>();
   for (size_t i = 0; i < processes.size(); i++) {
     v8::Local<v8::Object> process_value = ProcessToV8Object(processes[i]);
@@ -50,11 +49,4 @@ NAN_METHOD(ExportedGetProcesses) {
   }
   info.GetReturnValue().Set(results);
 }
-
-void ProcessInit(v8::Local<v8::Object> exports) {
-  exports->Set(Nan::New("GetProcesses").ToLocalChecked(),
-               Nan::New<v8::FunctionTemplate>(ExportedGetProcesses)->GetFunction());
-}
-
-NODE_MODULE(Process, ProcessInit)
 }  // namespace MacGenius

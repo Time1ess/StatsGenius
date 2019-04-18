@@ -597,11 +597,11 @@ kern_return_t SMCWriteSimple(char key[5], char *wvalue, io_connect_t conn) {
 }  // namespace
 
 namespace MacGenius {
-namespace Mac {
+namespace Darwin {
 namespace SMC {
 static bool initialized_ = false;
 
-void Initialize() {
+void SMCInitialize() {
   if (initialized_) {
     return;
   }
@@ -609,7 +609,7 @@ void Initialize() {
   initialized_ = true;
 }
 
-void Destroy() {
+void SMCDestroy() {
   if (!initialized_) {
     return;
   }
@@ -656,5 +656,5 @@ vector<pair<string, int>> SMCGetCPUTemperatures() {
 }
 
 }  // namespace SMC
-}  // namespace Mac
+}  // namespace Darwin
 }  // namespace MacGenius

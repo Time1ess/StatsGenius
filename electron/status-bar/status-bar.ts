@@ -1,10 +1,9 @@
 import { Tray, BrowserWindow, Rectangle } from 'electron';
 import * as path from 'path';
-import { Subject } from 'rxjs';
 import * as url from 'url';
 
 import { CPUMonitor } from '../stats/cpu';
-import { CPUData } from '../../src/interfaces/cpu';
+import { Observable } from 'rxjs';
 
 const isDev = require('electron-is-dev');
 
@@ -14,17 +13,30 @@ class StatusBarItem {
     private window: BrowserWindow;
     private monitor = new CPUMonitor();
 
-    private update$ = new Subject<CPUData>();
-
     constructor() {
         this.createWindow();
         this.createTray();
-        this.monitor.data.subscribe(data => {
-            this.window.webContents.send('cpu-data', data);
-            const title = `CPU: ${Math.round(data.totalUsage.userCPU + data.totalUsage.systemCPU)}%`;
-            this.tray.setTitle(title);
-            this.update$.next(data);
+        this.monitor.totalUsage.subscribe(data => {
+            this.window.webContents.send('total-usage', data);
+            let cpu = Math.round(data.userCPU + data.systemCPU);
+            if (isNaN(cpu)) {
+                cpu = 0;
+            }
+            this.tray.setTitle(`CPU: ${cpu}%`);
         });
+        const subscriptionTargets: Array<[Observable<{}>, string]> = [
+            [this.monitor.coreUsage, 'core-usage'],
+            [this.monitor.processes, 'processes'],
+            [this.monitor.averageLoad, 'average-load'],
+            [this.monitor.cpuTemperature, 'cpu-temperature'],
+            [this.monitor.uptime, 'uptime'],
+        ];
+        for (const item of subscriptionTargets) {
+            const [obs, channelName] = item;
+            obs.subscribe(data => {
+                this.window.webContents.send(channelName, data);
+            });
+        }
     }
 
     private createTray() {
@@ -38,15 +50,14 @@ class StatusBarItem {
             resizable: false,
             show: false,
             frame: false,
-            width: 1000,  // 280
-            height: 1000,
+            width: 280,
         });
         this.window.on('blur', () => {
             this.window.hide();
         });
         this.window.setVisibleOnAllWorkspaces(true);
-        this.window.webContents.openDevTools();
         if (isDev) {
+            this.window.webContents.openDevTools();
             this.window.loadURL('http://localhost:4200/');
         } else {
             this.window.loadURL(url.format({

@@ -27,13 +27,13 @@
 using namespace std;
 
 namespace MacGenius {
-namespace Mac {
+namespace Darwin {
 namespace SMC {
 
-void Initialize();
-void Destroy();
+void SMCInitialize();
+void SMCDestroy();
 
 vector<pair<string, int>> SMCGetCPUTemperatures();
-}
-}  // namespace Mac
+}  // namespace SMC
+}  // namespace Darwin
 }  // namespace MacGenius

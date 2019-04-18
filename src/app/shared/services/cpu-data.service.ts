@@ -1,28 +1,55 @@
 import { Injectable, NgZone } from '@angular/core';
 import { timer, Subject, Observable } from 'rxjs';
 
-import { CPUUsage, CPUData, ProcessData, CPULoad } from '../../../interfaces/cpu';
+import { CPUUsage, CPUData, CPULoad } from '../../../interfaces/cpu';
+import { Process } from '../../../interfaces/process';
 import { ElectronService } from './electron.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CPUDataService {
-  public cpuData: Observable<CPUData>;
+  public totalUsage: Observable<CPUUsage>;
+  public coreUsage: Observable<CPUUsage[]>;
+  public processes: Observable<Process[]>;
+  public averageLoad: Observable<CPULoad>;
+  public cpuTemperature: Observable<number>;
+  public uptime: Observable<number>;
 
-  private cpuData$ = new Subject<CPUData>();
+  private totalUsage$ = new Subject<CPUUsage>();
+  private coreUsage$ = new Subject<CPUUsage[]>();
+  private processes$ = new Subject<Process[]>();
+  private averageLoad$ = new Subject<CPULoad>();
+  private cpuTemperature$ = new Subject<number>();
+  private uptime$ = new Subject<number>();
 
   constructor(
     private readonly electronService: ElectronService,
     private readonly zone: NgZone,
   ) {
-    this.cpuData = this.cpuData$;
-    this.electronService.ipcRenderer.on('cpu-data',
-      (event: Electron.IpcMessageEvent, data: CPUData) => {
-        this.zone.run(() => {
-          this.cpuData$.next(data);
+    this.totalUsage = this.totalUsage$;
+    this.coreUsage = this.coreUsage$;
+    this.processes = this.processes$;
+    this.averageLoad = this.averageLoad$;
+    this.cpuTemperature = this.cpuTemperature$;
+    this.uptime = this.uptime$;
+    const targets: Array<[Subject<{}>, string]> = [
+      [this.totalUsage$, 'total-usage'],
+      [this.coreUsage$, 'core-usage'],
+      [this.processes$, 'processes'],
+      [this.averageLoad$, 'average-load'],
+      [this.cpuTemperature$, 'cpu-temperature'],
+      [this.uptime$, 'uptime'],
+    ];
+    for (const target of targets) {
+      const [subject, channelName] = target;
+      this.electronService.ipcRenderer.on(channelName,
+        (event: Electron.IpcMessageEvent, data: {}) => {
+          this.zone.run(() => {
+            subject.next(data);
+          });
         });
-      });
+    }
   }
 }
 
@@ -61,6 +88,7 @@ export class CPUTestDataService {
       userCPU: 40 * Math.random(),
       systemCPU: 40 * Math.random(),
       idleCPU: 20 * Math.random(),
+      niceCPU: 20 * Math.random(),
     };
   }
 
@@ -72,8 +100,8 @@ export class CPUTestDataService {
     return res;
   }
 
-  genProcessUsage(total: number): ProcessData[] {
-    const res: ProcessData[] = [];
+  genProcessUsage(total: number): Process[] {
+    const res: Process[] = [];
     for (let i = 0; i < total; i++) {
       res.push({
         pid: i,

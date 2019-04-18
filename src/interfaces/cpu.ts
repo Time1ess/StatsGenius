@@ -1,3 +1,5 @@
+import { Process } from "./process";
+
 export interface CPUUsage {
     /** How much CPU is consumed by user processes. */
     userCPU: number;
@@ -5,6 +7,8 @@ export interface CPUUsage {
     systemCPU: number;
     /** How much CPU is idle. */
     idleCPU: number;
+    /** How much CPU is cconsumed by niced processes. */
+    niceCPU: number;
 }
 
 export interface CPULoad {
@@ -13,19 +17,11 @@ export interface CPULoad {
     loadLast15Minutes: number;
 }
 
-export interface ProcessData {
-    pid: number;
-    commandName: string;
-    command: string;
-    icon: string;
-    percentCPU: number;
-}
-
 export interface CPUData {
     totalUsage?: CPUUsage;
     /** How much CPU is used w.r.t to CPU cores. */
     coreUsage?: CPUUsage[];
-    processes?: ProcessData[];
+    processes?: Process[];
     averageLoad?: CPULoad;
     cpuTemperature?: number;
     uptime?: number;

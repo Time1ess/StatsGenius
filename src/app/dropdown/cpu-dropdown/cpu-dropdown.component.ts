@@ -4,7 +4,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CPUDataService } from '../../shared/services/cpu-data.service';
-import { CPUData } from '../../../interfaces/cpu';
+import { CPUUsage, CPULoad } from '../../../interfaces/cpu';
+import { Process } from '../../../interfaces/process';
 
 @Component({
   selector: 'app-cpu-dropdown',
@@ -16,8 +17,7 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   readonly COLOR_RED = '#f44336';  // Red
   readonly COLOR_GRAY = '#9B9B9B';
 
-  cpuData: CPUData = null;
-  cpuUsageOptions: EChartOption = {
+  totalUsageOptions: EChartOption = {
     xAxis: {
       type: 'category',
       boundaryGap: false,
@@ -198,7 +198,12 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     },
   };
 
-  private historyLabel: string[] = [];
+  totalUsage: CPUUsage = null;
+  cpuTemperature: number = null;
+  processes: Process[] = [];
+  averageLoad: CPULoad = null;
+  uptime: number = null;
+
   private historyUserCPU: number[] = [];
   private historySystemCPU: number[] = [];
   private historyLoadLast1Minute: number[] = [];
@@ -207,7 +212,7 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   private peakLoad = 0;
 
   private readonly destroyed$ = new Subject<void>();
-  private cpuUsageChart: ECharts;
+  private totalUsageChart: ECharts;
   private coreUsageChart: ECharts;
   private averageLoadChart: ECharts;
 
@@ -216,9 +221,24 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.cpuDataService.cpuData.pipe(
+    this.cpuDataService.totalUsage.pipe(
       takeUntil(this.destroyed$),
-    ).subscribe((data) => this.update(data));
+    ).subscribe((data) => this.updateTotalUsage(data));
+    this.cpuDataService.coreUsage.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((data) => this.updateCoreUsage(data));
+    this.cpuDataService.processes.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((data) => this.processes = data);
+    this.cpuDataService.averageLoad.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((data) => this.updateAverageLoad(data));
+    this.cpuDataService.cpuTemperature.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((data) => this.cpuTemperature = data);
+    this.cpuDataService.uptime.pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe((data) => this.uptime = data);
   }
 
   ngOnDestroy() {
@@ -226,44 +246,26 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
   }
 
-  update(data: CPUData) {
-    this.updateData(data);
-    this.updateCPUUsageChart();
-    this.updateCoreUsageChart();
-    this.updateAverageLoadChart();
-  }
-
-  private updateData(data: CPUData) {
-    this.cpuData = data;
-    this.historyLabel.push(new Date().toLocaleTimeString());
-    this.historyUserCPU.push(this.cpuData.totalUsage.userCPU);
-    this.historySystemCPU.push(this.cpuData.totalUsage.systemCPU);
-    this.peakLoad = Math.max(this.peakLoad, this.cpuData.averageLoad.loadLast1Minute);
-    this.historyLoadLast1Minute.push(this.cpuData.averageLoad.loadLast1Minute);
-    this.historyLoadLast5Minutes.push(this.cpuData.averageLoad.loadLast5Minutes);
-    this.historyLoadLast15Minutes.push(this.cpuData.averageLoad.loadLast15Minutes);
-    if (this.historyLabel.length > 200) {
-      this.historyLabel.shift();
-      this.historyUserCPU.shift();
-      this.historySystemCPU.shift();
-      this.historyLoadLast1Minute.shift();
-      this.historyLoadLast5Minutes.shift();
-      this.historyLoadLast15Minutes.shift();
+  private trimData(data: Array<{}>) {
+    if (data.length > 200) {
+      data.shift();
     }
   }
 
-  onCPUUsageChartInit(event: ECharts) {
-    this.cpuUsageChart = event;
+  onTotalUsageChartInit(event: ECharts) {
+    this.totalUsageChart = event;
   }
 
-  updateCPUUsageChart() {
-    if (!this.cpuUsageChart) {
+  updateTotalUsage(data: CPUUsage) {
+    this.totalUsage = data;
+    this.historyUserCPU.push(data.userCPU);
+    this.historySystemCPU.push(data.systemCPU);
+    this.trimData(this.historyUserCPU);
+    this.trimData(this.historySystemCPU);
+    if (!this.totalUsageChart) {
       return;
     }
-    this.cpuUsageChart.setOption({
-      xAxis: {
-        data: this.historyLabel,
-      },
+    this.totalUsageChart.setOption({
       series: [
         {
           data: this.historyUserCPU,
@@ -279,19 +281,19 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     this.coreUsageChart = event;
   }
 
-  updateCoreUsageChart() {
+  updateCoreUsage(data: CPUUsage[]) {
     if (!this.coreUsageChart) {
       return;
     }
     this.coreUsageChart.setOption({
       series: [
         {
-          data: this.cpuData.coreUsage.map(x => x.userCPU),
+          data: data.map(x => x.userCPU),
           stack: 'usage',
           type: 'bar',
         },
         {
-          data: this.cpuData.coreUsage.map(x => x.systemCPU),
+          data: data.map(x => x.systemCPU),
           stack: 'usage',
           type: 'bar',
         },
@@ -303,14 +305,19 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
     this.averageLoadChart = event;
   }
 
-  updateAverageLoadChart() {
+  updateAverageLoad(data: CPULoad) {
+    this.averageLoad = data;
+    this.peakLoad = Math.max(this.peakLoad, data.loadLast1Minute);
+    this.historyLoadLast1Minute.push(data.loadLast1Minute);
+    this.historyLoadLast5Minutes.push(data.loadLast5Minutes);
+    this.historyLoadLast15Minutes.push(data.loadLast15Minutes);
+    this.trimData(this.historyLoadLast1Minute);
+    this.trimData(this.historyLoadLast5Minutes);
+    this.trimData(this.historyLoadLast15Minutes);
     if (!this.averageLoadChart) {
       return;
     }
     this.averageLoadChart.setOption({
-      xAxis: {
-        data: this.historyLabel,
-      },
       title: {
         text: `Peak Load: ${this.peakLoad.toFixed(2)}`,
       },

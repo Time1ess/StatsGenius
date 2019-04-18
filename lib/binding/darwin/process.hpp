@@ -18,6 +18,7 @@ class DarwinProcess {
 
  private:
   string GetCommand();
+  string GetCommandName();
   float GetPercentCPU();
 
   bool pre_existing_ {false};
@@ -26,6 +27,7 @@ class DarwinProcess {
   uint64_t utime_ {0};
   uint64_t stime_ {0};
   string command_ {""};
+  string command_name_ {""};
 
 };
 vector<Process> GetProcesses();
