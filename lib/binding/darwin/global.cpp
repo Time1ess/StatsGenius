@@ -4,7 +4,7 @@
 #include "global.hpp"
 #include "third_party/libsmc/smc.hpp"
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 processor_cpu_load_info_t prev_load;
 processor_cpu_load_info_t curr_load;
@@ -84,4 +84,4 @@ void GlobalDestroy(void*) {
   update_thread->join();
 }
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

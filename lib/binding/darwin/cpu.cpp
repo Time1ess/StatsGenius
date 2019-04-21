@@ -7,7 +7,7 @@
 #include "global.hpp"
 #include "third_party/libsmc/smc.hpp"
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 
 vector<float> GetAverageLoad() {
@@ -74,4 +74,4 @@ uint32_t GetUptime() {
   return time(nullptr) - boot_time.tv_sec;
 }
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

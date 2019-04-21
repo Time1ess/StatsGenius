@@ -39,7 +39,7 @@ var StatusBarItem = /** @class */ (function () {
     }
     StatusBarItem.prototype.createTray = function () {
         this.tray = new electron_1.Tray(path.join(__dirname, '..', 'assets', 'images', 'magic-lamp_16x16.png'));
-        this.tray.setToolTip('MacGenius');
+        this.tray.setToolTip('StatsGenius');
         this.tray.on('click', this.onClick.bind(this));
     };
     StatusBarItem.prototype.createWindow = function () {

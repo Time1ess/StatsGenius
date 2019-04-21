@@ -1,6 +1,6 @@
 #include "cpu_usage.hpp"
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 CPUUsage::CPUUsage(unsigned int user_cpu_arg, unsigned int system_cpu_arg,
                    unsigned int idle_cpu_arg)
@@ -34,4 +34,4 @@ v8::Local<v8::Object> CPUUsage::ToV8Object() {
 
 
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

@@ -2,7 +2,7 @@
 
 #include <nan.h>
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 class CPUUsage {
@@ -14,4 +14,4 @@ class CPUUsage {
 };
 
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

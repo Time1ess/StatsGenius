@@ -26,13 +26,13 @@ export class CPUMonitor {
         this.averageLoad = this.averageLoad$;
         this.cpuTemperature = this.cpuTemperature$;
         this.uptime = this.uptime$;
-        timer(0, 5 * 1000).subscribe(() => {
+        timer(0, 3 * 1000).subscribe(() => {
             this.totalUsage$.next(genius.totalUsage());
             this.coreUsage$.next(genius.coresUsage());
             this.averageLoad$.next(genius.loadavg());
             this.processes$.next(genius.processes());
         });
-        timer(0, 10 * 1000).subscribe(() => {
+        timer(0, 6 * 1000).subscribe(() => {
             this.cpuTemperature$.next(genius.temperature());
         });
         timer(0, 60 * 1000).subscribe(() => {

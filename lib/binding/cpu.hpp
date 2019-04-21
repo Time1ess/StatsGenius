@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 NAN_METHOD(V8GetAverageLoad);
 NAN_METHOD(V8GetCPUTotalUsage);
 NAN_METHOD(V8GetCPUCoresUsage);

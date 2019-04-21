@@ -5,14 +5,14 @@
 
 #ifdef __APPLE__
 #include "darwin/global.hpp"
-using namespace MacGenius::Darwin;
+using namespace StatsGenius::Darwin;
 #elif _WIN32
 #elif __linux__
 #else
 #error No operating system defined
 #endif
 
-namespace MacGenius {
+namespace StatsGenius {
 void Init(v8::Local<v8::Object> exports) {
   GlobalInitialize();
 
@@ -34,4 +34,4 @@ void Init(v8::Local<v8::Object> exports) {
 
 NODE_MODULE(Genius, Init)
 
-}  // namespace MacGenius
+}  // namespace StatsGenius

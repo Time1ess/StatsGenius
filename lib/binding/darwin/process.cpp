@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 static unordered_map<int, DarwinProcess> processes;
 static size_t cpu_count_;
@@ -170,4 +170,4 @@ vector<Process> GetProcesses() {
   return results;
 }
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

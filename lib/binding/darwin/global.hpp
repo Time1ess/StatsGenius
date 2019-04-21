@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 
 extern mutex data_lock;
@@ -24,4 +24,4 @@ extern vector<uint64_t> cpu_core_ticks;
 void GlobalInitialize();
 void GlobalDestroy(void*);
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

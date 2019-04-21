@@ -3,7 +3,7 @@
 
 #include "cpu_statistics.hpp"
 
-using namespace MacGenius::CPUMeter;
+using namespace StatsGenius::CPUMeter;
 
 NAN_METHOD(GetCPUStatistics) {
   unique_ptr<CPUStatistics> cpuStatistics = CPUStatistics::Get();

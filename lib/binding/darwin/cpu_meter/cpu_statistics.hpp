@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 class CPUStatistics {
@@ -43,4 +43,4 @@ class CPUStatistics {
   static bool initialized_;
 };
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

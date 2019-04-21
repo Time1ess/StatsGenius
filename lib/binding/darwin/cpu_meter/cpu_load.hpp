@@ -3,7 +3,7 @@
 #include <nan.h>
 #include <sys/sysctl.h>
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 class CPULoad {
@@ -16,4 +16,4 @@ class CPULoad {
 };
 
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

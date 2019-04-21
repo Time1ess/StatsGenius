@@ -4,7 +4,7 @@
 
 #ifdef __APPLE__
 #include "darwin/process.hpp"
-using namespace MacGenius::Darwin;
+using namespace StatsGenius::Darwin;
 #elif _WIN32
 #elif __linux__
 #else
@@ -12,7 +12,7 @@ using namespace MacGenius::Darwin;
 #endif
 
 
-namespace MacGenius {
+namespace StatsGenius {
 v8::Local<v8::Object> ProcessToV8Object(Process& p) {
   v8::Local<v8::Object> result = Nan::New<v8::Object>();
 
@@ -49,4 +49,4 @@ NAN_METHOD(V8GetProcesses) {
   }
   info.GetReturnValue().Set(results);
 }
-}  // namespace MacGenius
+}  // namespace StatsGenius

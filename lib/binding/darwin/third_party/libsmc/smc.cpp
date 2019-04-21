@@ -596,7 +596,7 @@ kern_return_t SMCWriteSimple(char key[5], char *wvalue, io_connect_t conn) {
 
 }  // namespace
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 namespace SMC {
 static bool initialized_ = false;
@@ -657,4 +657,4 @@ vector<pair<string, int>> SMCGetCPUTemperatures() {
 
 }  // namespace SMC
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

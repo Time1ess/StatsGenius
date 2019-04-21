@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 class DarwinProcess {
  public:
@@ -32,4 +32,4 @@ class DarwinProcess {
 };
 vector<Process> GetProcesses();
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

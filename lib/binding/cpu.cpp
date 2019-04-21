@@ -2,14 +2,14 @@
 
 #ifdef __APPLE__
 #include "darwin/cpu.hpp"
-using namespace MacGenius::Darwin;
+using namespace StatsGenius::Darwin;
 #elif _WIN32
 #elif __linux__
 #else
 #error No operating system defined
 #endif
 
-namespace MacGenius {
+namespace StatsGenius {
 NAN_METHOD(V8GetAverageLoad) {
   vector<float> average_load = GetAverageLoad();
   v8::Local<v8::Array> results = Nan::New<v8::Array>();

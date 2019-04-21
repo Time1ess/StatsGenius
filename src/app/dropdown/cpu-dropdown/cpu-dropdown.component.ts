@@ -215,10 +215,17 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   private totalUsageChart: ECharts;
   private coreUsageChart: ECharts;
   private averageLoadChart: ECharts;
+  private maximumDataLength = 200;
 
   constructor(
     readonly cpuDataService: CPUDataService,
-  ) { }
+  ) {
+    this.historyUserCPU = Array(this.maximumDataLength).map(x => 0);
+    this.historySystemCPU = Array(this.maximumDataLength).map(x => 0);
+    this.historyLoadLast1Minute = Array(this.maximumDataLength).map(x => 0);
+    this.historyLoadLast5Minutes = Array(this.maximumDataLength).map(x => 0);
+    this.historyLoadLast15Minutes = Array(this.maximumDataLength).map(x => 0);
+  }
 
   ngOnInit() {
     this.cpuDataService.totalUsage.pipe(
@@ -247,7 +254,7 @@ export class CPUDropdownComponent implements OnInit, OnDestroy {
   }
 
   private trimData(data: Array<{}>) {
-    if (data.length > 200) {
+    if (data.length > this.maximumDataLength) {
       data.shift();
     }
   }

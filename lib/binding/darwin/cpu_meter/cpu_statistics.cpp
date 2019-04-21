@@ -31,7 +31,7 @@ void FreeCPULoadInfo(processor_cpu_load_info_t* p) {
 }
 
 }  // namespace
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 processor_cpu_load_info_t CPUStatistics::prev_cpu_load_info_;
@@ -41,12 +41,12 @@ size_t CPUStatistics::num_cpus_;
 
 void CPUStatistics::Initialize() {
   GetCPUInfo(&prev_cpu_load_info_);
-  MacGenius::Mac::SMC::Initialize();
+  StatsGenius::Mac::SMC::Initialize();
   initialized_ = true;
 }
 
 void CPUStatistics::Destroy() {
-  MacGenius::Mac::SMC::Destroy();
+  StatsGenius::Mac::SMC::Destroy();
   initialized_ = false;
 }
 
@@ -74,7 +74,7 @@ void CPUStatistics::Prepare() {
 void CPUStatistics::UpdateCPUTemperature() {
   // This is slow, with this step, the call time increases from ~2ms to 100+ms.
   // Consider only retrieve this in <Temperature Meter Section>
-  vector<pair<string, int>> temps = MacGenius::Mac::SMC::SMCGetCPUTemperatures();
+  vector<pair<string, int>> temps = StatsGenius::Mac::SMC::SMCGetCPUTemperatures();
   float sum = 0;
   for (auto& temp : temps) {
     sum += temp.second;
@@ -172,4 +172,4 @@ v8::Local<v8::Object> CPUStatistics::ToV8ObjectWithThis() {
   return result;
 }
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

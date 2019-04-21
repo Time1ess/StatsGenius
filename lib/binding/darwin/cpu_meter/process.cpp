@@ -120,7 +120,7 @@ endl; return "";
 */
 }  // namespace
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 static unordered_map<int, unique_ptr<Process>> processes;
@@ -279,4 +279,4 @@ v8::Local<v8::Object> Process::ToV8Object() const {
 }
 
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

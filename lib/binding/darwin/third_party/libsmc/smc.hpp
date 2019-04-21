@@ -26,7 +26,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace Darwin {
 namespace SMC {
 
@@ -36,4 +36,4 @@ void SMCDestroy();
 vector<pair<string, int>> SMCGetCPUTemperatures();
 }  // namespace SMC
 }  // namespace Darwin
-}  // namespace MacGenius
+}  // namespace StatsGenius

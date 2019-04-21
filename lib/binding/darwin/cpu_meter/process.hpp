@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 
@@ -42,4 +42,4 @@ class Process {
 };
 
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

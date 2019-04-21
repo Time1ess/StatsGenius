@@ -1,6 +1,6 @@
 #include "cpu_load.hpp"
 
-namespace MacGenius {
+namespace StatsGenius {
 namespace CPUMeter {
 
 CPULoad::CPULoad(loadavg average_load) : average_load_{average_load} {}
@@ -31,4 +31,4 @@ v8::Local<v8::Object> CPULoad::ToV8Object() {
 }
 
 }  // namespace CPUMeter
-}  // namespace MacGenius
+}  // namespace StatsGenius

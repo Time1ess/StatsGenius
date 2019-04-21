@@ -17,13 +17,13 @@ var CPUMonitor = /** @class */ (function () {
         this.averageLoad = this.averageLoad$;
         this.cpuTemperature = this.cpuTemperature$;
         this.uptime = this.uptime$;
-        rxjs_1.timer(0, 5 * 1000).subscribe(function () {
+        rxjs_1.timer(0, 3 * 1000).subscribe(function () {
             _this.totalUsage$.next(genius.totalUsage());
             _this.coreUsage$.next(genius.coresUsage());
             _this.averageLoad$.next(genius.loadavg());
             _this.processes$.next(genius.processes());
         });
-        rxjs_1.timer(0, 10 * 1000).subscribe(function () {
+        rxjs_1.timer(0, 6 * 1000).subscribe(function () {
             _this.cpuTemperature$.next(genius.temperature());
         });
         rxjs_1.timer(0, 60 * 1000).subscribe(function () {

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace MacGenius {
+namespace StatsGenius {
 struct Process {
     pid_t pid;
     string command_name;
